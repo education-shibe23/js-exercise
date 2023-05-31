@@ -84,6 +84,19 @@
     // 処理の登録は、事前に作成した関数を渡すことで行う
     elem.addEventListener('click', onTapped);
   }
+
+  function shufflePieces() {
+    // "item" という class がつけられた HTML を全て探して、変数に代入
+    var elements = document.querySelectorAll(".item");
+
+    // elements 変数 (配列) の中身を for 文でひとつずつ取り出す
+    for (var elem of elements) {
+      // 1 〜 16 の数字をランダムに、CSS の order に設定
+      elem.style.order = parseInt(Math.random() * 16) + 1;
+    }
+  }
+
+  shufflePieces();
 </script>
 </body>
 
