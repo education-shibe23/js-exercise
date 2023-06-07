@@ -44,6 +44,8 @@
     .piece-15 { order: 15; }
     .piece-16 { order: 16; }
   </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 </head>
 
 <body>
@@ -67,36 +69,28 @@
   </div>
 
 <script>
-  // "item" という class がつけられた HTML を全て探して、変数に代入
-  var elements = document.querySelectorAll(".item");
+// Model、すなわち "ピースの順番を管理する配列" を用意する
+var model = [ 2, 1, 3, 4, 5, 7, 6, 8, 9, 11, 10, 12, 13, 14, 15, 16 ];
 
-  // 事前に、タップされた時に行ってほしいことを関数として用意しておく
-  // 引数には Event が起こった時の詳細な情報が渡される
-  function onTapped(event) {
-    console.log(event);
-    console.log("タップされたよ！");
+// Model → View への反映部分を作成する (そのような処理を通称 "コンポーネント" と呼ぶ)
+function component() {
+  var views = document.querySelectorAll(".item");
+
+  for (var index = 0; index <= 15; index = index + 1) {
+    // Model の内容を、対応する View に反映する
+    // 今回であれば、あるピースの順番を、CSS の order に反映する
+    views[index].style.order = model[index];
   }
+}
 
-  // elements 変数 (配列) の中身を for 文でひとつずつ取り出す
-  for (var elem of elements) {
-    // Event とは "なんらかの物事"
-    // 物事が起こった時だけ処理を行う仕組みが addEventListener
-    // 処理の登録は、事前に作成した関数を渡すことで行う
-    elem.addEventListener('click', onTapped);
-  }
+function shufflePieces() {
+  // Model を _.shuffle でシャッフルし、シャッフル結果を再度代入する
+  // 参考 → https://lodash.com/docs/4.17.15#shuffle
+  model = _.shuffle(model);
+}
 
-  function shufflePieces() {
-    // "item" という class がつけられた HTML を全て探して、変数に代入
-    var elements = document.querySelectorAll(".item");
-
-    // elements 変数 (配列) の中身を for 文でひとつずつ取り出す
-    for (var elem of elements) {
-      // 1 〜 16 の数字をランダムに、CSS の order に設定
-      elem.style.order = parseInt(Math.random() * 16) + 1;
-    }
-  }
-
-  shufflePieces();
+shufflePieces();
+component();
 </script>
 </body>
 
