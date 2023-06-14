@@ -89,8 +89,28 @@ function shufflePieces() {
   model = _.shuffle(model);
 }
 
-shufflePieces();
-component();
+function initializeTapOperations() {
+  var elements = document.querySelectorAll(".item");
+
+  // 事前に、タップされた時に行ってほしいことを関数として用意しておく
+  // 引数には Event が起こった時の詳細な情報が渡される
+  function onTapped(event) {
+    console.log(event);
+    console.log("タップされたよ！");
+  }
+
+  // elements 変数 (配列) の中身を for 文でひとつずつ取り出す
+  for (var elem of elements) {
+    // Event とは "なんらかの物事"
+    // 物事が起こった時だけ処理を行う仕組みが addEventListener
+    // 処理の登録は、事前に作成した関数を渡すことで行う
+    elem.addEventListener('click', onTapped);
+  }
+}
+
+initializeTapOperations(); // 各ピースに対して、タップ時の処理を登録する (1 回のみで OK)
+shufflePieces();           // Model をシャッフルする (1 回のみで OK)
+component();               // Model → View への反映を行う
 </script>
 </body>
 
