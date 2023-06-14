@@ -70,7 +70,7 @@
 
 <script>
 // [Model] "ピースの順番を管理する配列" を用意する
-var ordersModel = [ 1, 2, 3, 4, 5, 7, 6, 8, 9, 11, 10, 12, 13, 14, 15, 16 ];
+var ordersModel = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ];
 
 // [Model] 空白ピース基準で、移動が許されるピースの order を格納する
 var movableOrdersModel = [ 12, 15 ];
@@ -125,8 +125,27 @@ function initializeTapOperations() {
   // 事前に、タップされた時に行ってほしいことを関数として用意しておく
   // 引数には Event が起こった時の詳細な情報が渡される
   function onTapped(event) {
-    console.log(event);
-    console.log("タップされたよ！");
+    findAdjacentOfEmpty();
+
+    // タップされたピースの order を取得
+    const tappedOrder = Number(event.target.style.order);
+
+    // タップされたピースの番号を取得
+    const tappedPiece = Number(event.target.innerHTML) - 1;
+
+    // タップされたピースの order が、movableOrdersModel 配列に含まれるかを調べる
+    if (movableOrdersModel.includes(tappedOrder)) {
+      const temp = ordersModel[15];
+      ordersModel[15] = tappedOrder;
+      ordersModel[tappedPiece] = temp;
+
+      component();
+    }
+
+    // 数字が順番に並んでいるかの判定を行う
+    if (String(ordersModel) === '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16') {
+      setTimeout(() => alert('クリア！'), 0);
+    };
   }
 
   // elements 変数 (配列) の中身を for 文でひとつずつ取り出す
