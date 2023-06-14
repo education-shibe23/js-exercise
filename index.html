@@ -69,8 +69,11 @@
   </div>
 
 <script>
-// Model、すなわち "ピースの順番を管理する配列" を用意する
-var model = [ 2, 1, 3, 4, 5, 7, 6, 8, 9, 11, 10, 12, 13, 14, 15, 16 ];
+// [Model] "ピースの順番を管理する配列" を用意する
+var ordersModel = [ 1, 2, 3, 4, 5, 7, 6, 8, 9, 11, 10, 12, 13, 14, 15, 16 ];
+
+// [Model] 空白ピース基準で、移動が許されるピースの order を格納する
+var movableOrdersModel = [ 12, 15 ];
 
 // Model → View への反映部分を作成する (そのような処理を通称 "コンポーネント" と呼ぶ)
 function component() {
@@ -79,14 +82,41 @@ function component() {
   for (var index = 0; index <= 15; index = index + 1) {
     // Model の内容を、対応する View に反映する
     // 今回であれば、あるピースの順番を、CSS の order に反映する
-    views[index].style.order = model[index];
+    views[index].style.order = ordersModel[index];
   }
 }
 
 function shufflePieces() {
   // Model を _.shuffle でシャッフルし、シャッフル結果を再度代入する
   // 参考 → https://lodash.com/docs/4.17.15#shuffle
-  model = _.shuffle(model);
+  ordersModel = _.shuffle(ordersModel);
+}
+
+// 空白ピースに対して、上下左右のピースに対応する order 番号を求める
+function findAdjacentOfEmpty() {
+    // 全体の order を管理する Model の、16 番目が空白ピースの order
+    var emptyOrder = ordersModel[15];
+
+    movableOrdersModel = [
+        emptyOrder - 4,
+        emptyOrder + 4,
+    ];
+    
+    // 左端の order でないなら、-1 の order を左隣として考えることができる
+    if (emptyOrder % 4 !== 1) {
+        movableOrdersModel.push(emptyOrder - 1);
+    }
+
+    // 右端の order でないなら、+1 の order を右隣として考えることができる
+    if (emptyOrder % 4 !== 0) {
+        movableOrdersModel.push(emptyOrder + 1);
+    }
+
+    // 1 以上の order 番号を残す処理
+    movableOrdersModel = movableOrdersModel.filter(x => 1 <= x);
+
+    // 16 以下の order 番号を残す処理
+    movableOrdersModel = movableOrdersModel.filter(x => x <= 16);
 }
 
 function initializeTapOperations() {
